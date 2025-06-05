@@ -2,7 +2,7 @@
 let t1,t2,t3,t4,t5,t6,t7,i = 0
 let temp = 0;
 let npctalk = [false,false,false,false,false]
-let noOfPokemonLeft = 1
+let noOfPokemonLeft = 0
 let trainerImg
 
 let pokemon1Img = null,pokemon2Img = null,pokemon3Img = null
@@ -153,14 +153,14 @@ function setup() {
   cnv.parent(document.body);
   cnv.style('z-index', '-1');
 
-  gameState = 3;
-  bgState = 5;
+  gameState = 0;
+  bgState = 0;
   move = true;
   moving = false
   interact = false;
   chat = false;
   battlingChat = false
-  starterPokemon = "Chimchar"
+  starterPokemon = ""
   menuCreated = false
   menuIndex = 0
   subIndex = -10
@@ -180,7 +180,7 @@ function setup() {
   moveSpeed = 4
   tc = false;
   gc = false
-  playerLocation = "auburn_town"
+  playerLocation = ""
   mult = 1
 
   battle = false
@@ -220,9 +220,9 @@ function setup() {
   playerName = "";
   inputCreated = false;
 
-  party = [new Pokemon("Chimchar",5,pokedex,moveDB,[],null)]
-  noOfPartyPokemon = 1
-  noOfPokemon = 1
+  party = []
+  noOfPartyPokemon = 0
+  noOfPokemon = 0
   
 
   player = createSprite(410,109)
