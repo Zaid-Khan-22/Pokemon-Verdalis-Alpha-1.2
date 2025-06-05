@@ -2,7 +2,7 @@
 let t1,t2,t3,t4,t5,t6,t7,i = 0
 let temp = 0;
 let npctalk = [false,false,false,false,false]
-let noOfPokemonLeft = 0
+let noOfPokemonLeft = 1
 let trainerImg
 
 let pokemon1Img = null,pokemon2Img = null,pokemon3Img = null
@@ -153,14 +153,14 @@ function setup() {
   cnv.parent(document.body);
   cnv.style('z-index', '-1');
 
-  gameState = 0;
-  bgState = 0;
+  gameState = 3;
+  bgState = 5;
   move = true;
   moving = false
   interact = false;
   chat = false;
   battlingChat = false
-  starterPokemon = ""
+  starterPokemon = "Chimchar"
   menuCreated = false
   menuIndex = 0
   subIndex = -10
@@ -180,7 +180,7 @@ function setup() {
   moveSpeed = 4
   tc = false;
   gc = false
-  playerLocation = ""
+  playerLocation = "auburn_town"
   mult = 1
 
   battle = false
@@ -220,9 +220,9 @@ function setup() {
   playerName = "";
   inputCreated = false;
 
-  party = []
-  noOfPartyPokemon = 0
-  noOfPokemon = 0
+  party = [new Pokemon("Chimchar",5,pokedex,moveDB,[],null)]
+  noOfPartyPokemon = 1
+  noOfPokemon = 1
   
 
   player = createSprite(410,109)
@@ -387,8 +387,8 @@ function draw() {
   drawSprites();
 }
 
-  /*console.log(gameState,bgState,mouseX,mouseY,playerLocation,player.x,
-    player.y,catchState)*/
+  console.log(gameState,bgState,mouseX,mouseY,playerLocation,player.x,
+    player.y,catchState)
 
   if(npc1&&npc1.isTouching(player)){
     npctalk[0] = true
@@ -992,12 +992,13 @@ function battleChatting(){
     
   if(battleChat === true&&!trainerSprite&&!playerSprite){
   if(currentBattle.type === "trainer"){
+    trainerImg = loadImage("sprites/"+currentBattle.trainerClass+".png")
   trainerSprite = createSprite(485,104)
   trainerSprite.addImage(trainerImg)
       trainerSprite.scale = 1.2
     }
     else{
-    enemyPokemonFront = loadImage("/front/" + currentBattle.enemyCurrentPokemon + ".png");
+    enemyPokemonFront = loadImage("front/" + currentBattle.enemyCurrentPokemon + ".png");
     enemyPokemon.addImage(enemyPokemonFront);
     enemyPokemon.visible = true;
     trainerSprite.visible = false
@@ -1008,11 +1009,12 @@ function battleChatting(){
   }
 
   if(currentBattle.type === "trainer"){
+    trainerImg = loadImage("sprites/"+currentBattle.trainerClass+".png")   
   trainerSprite.addImage(trainerImg)
       trainerSprite.scale = 1.2
     }
     else{
-    enemyPokemonFront = loadImage("/front/" + currentBattle.enemyCurrentPokemon + ".png");
+    enemyPokemonFront = loadImage("front/" + currentBattle.enemyCurrentPokemon + ".png");
     enemyPokemon.addImage(enemyPokemonFront);
     enemyPokemon.visible = true;
     trainerSprite.visible = false
@@ -1175,10 +1177,10 @@ rect(405,270,230,5)
   
   battleText3 = ``
   
-    enemyPokemonFront = loadImage("/front/" + currentBattle.enemyCurrentPokemon + ".png");
+    enemyPokemonFront = loadImage("front/" + currentBattle.enemyCurrentPokemon + ".png");
     enemyPokemon.addImage(enemyPokemonFront);
     enemyPokemon.visible = true;
-    playerPokemonBack = loadImage("/back/" + currentBattle.playerCurrentPokemon + ".png");
+    playerPokemonBack = loadImage("back/" + currentBattle.playerCurrentPokemon + ".png");
     pokemonSent = true;
 
     playerPokemon.addImage(playerPokemonBack);
@@ -2958,7 +2960,6 @@ function NPCS() {
         |
         Pokémon's type will do more damage!`
       ],false,officerdownstand,false,[enemyPokemon1],500)
-      trainerImg = loadImage("sprites/officer.png")
       npc1.sprite.scale = 1.1
       npcArray.push(npc1)
       npc1.sprite.addAnimation("up_s",officerupstand)
@@ -3112,7 +3113,6 @@ if (
       battle! I'll battle you with a Pokemon I just caught|`
     ],false,
       kaidownstand,false,enemyCreatedTeam,1000)
-      trainerImg = loadImage("sprites/kai.png")
       kai.sprite.scale = 1.1 
           npcArray.push(kai)
       kai.sprite.addAnimation("up_s",kaiupstand)
@@ -3164,6 +3164,7 @@ if (
     }    
     
     if(gameState === 3.2&&playerLocation === "route_1"&&bgState === 1&&kai&&!kai.isTalking){
+      console.log(kai.isTalking)
       kai.talk();
       let kaiNewDialouge = [
         `And that’s how you catch a Pokémon! Pretty smooth, huh?|
@@ -3369,8 +3370,11 @@ function transitionFunction(transitionState) {
 
     if (tCharge.y > 3000) {
       transitionState.state = "intro";
-      if(transitionState.type !== "trainer"){
-        trainerImg = loadImage("/front/"+transitionState.enemyCurrentPokemon+".png")
+      if(transitionState.type === "trainer"){
+        trainerImg = loadImage("sprites/"+transitionState.transitionState+".png")
+      }
+      else{
+        trainerImg = loadImage("front/"+transitionState.enemyCurrentPokemon+".png")
       }
       transitionFunctionBoolean = false; // Stop transition
       tempSprite.visible = false
@@ -3387,8 +3391,11 @@ function transitionFunction(transitionState) {
 
 function introDialouge(h1){
 //works
-if(h1.type !== "trainer"){
-  trainerImg = loadImage("/front/"+h1.enemyTeam[0].name+".png")
+if(h1.type === "trainer"){
+trainerImg = loadImage("sprites/"+h1.trainerClass+".png")
+}
+else{
+  trainerImg = loadImage("front/"+h1.enemyTeam[0].name+".png")
 }
 playerBack = loadImage("playerBack.png")
   if(battleChat === true&&!trainerSprite&&!playerSprite){
@@ -3447,8 +3454,8 @@ let pokemonSent = false, playerPokemon, enemyPokemon;
 
 function sendPokemon(trainerPokemon) {
   if (!pokemonSent) {
-    enemyPokemonFront = loadImage("/front/" + trainerPokemon.enemyCurrentPokemon + ".png");
-    playerPokemonBack = loadImage("/back/" + trainerPokemon.playerCurrentPokemon + ".png");
+    enemyPokemonFront = loadImage("front/" + trainerPokemon.enemyCurrentPokemon + ".png");
+    playerPokemonBack = loadImage("back/" + trainerPokemon.playerCurrentPokemon + ".png");
     pokemonSent = true;
   }
 
@@ -4386,22 +4393,22 @@ if(menuPage === "bag"){
     if(menuIndex === 1){
       menuPage = "party"
       if(party.length>=1){
-        pokemon1Img = loadImage("/front/" + party[0].name + ".png");
+        pokemon1Img = loadImage("front/" + party[0].name + ".png");
       }
       if(party.length>=2){
-        pokemon2Img = loadImage("/front/" + party[1].name + ".png");
+        pokemon2Img = loadImage("front/" + party[1].name + ".png");
       }
       if(party.length>=3){
-        pokemon3Img = loadImage("/front/" + party[2].name + ".png");
+        pokemon3Img = loadImage("front/" + party[2].name + ".png");
       }
       if(party.length>=4){
-        pokemon4Img = loadImage("/front/" + party[3].name + ".png");
+        pokemon4Img = loadImage("front/" + party[3].name + ".png");
       }
       if(party.length>=5){
-        pokemon5Img = loadImage("/front/" + party[4].name + ".png");
+        pokemon5Img = loadImage("front/" + party[4].name + ".png");
       }
       if(party.length>=6){
-        pokemon6Img = loadImage("/front/" + party[5].name + ".png");
+        pokemon6Img = loadImage("front/" + party[5].name + ".png");
       }
       menuCreated = false
     }
@@ -4588,13 +4595,13 @@ function catchingTutorial(){
     catchState = "menu"
     catchCharge.velocityY = 0
     if(starterPokemon === "Rowlet"){
-      pokemonBackSprite = loadImage("/back/Chimchar.png")
+      pokemonBackSprite = loadImage("back/Chimchar.png")
     }
     if(starterPokemon === "Chimchar"){
-      pokemonBackSprite = loadImage("/back/Mudkip.png")
+      pokemonBackSprite = loadImage("back/Mudkip.png")
     }
     if(starterPokemon === "Mudkip"){
-      pokemonBackSprite = loadImage("/back/Rowlet.png")
+      pokemonBackSprite = loadImage("back/Rowlet.png")
     }
   }
 
